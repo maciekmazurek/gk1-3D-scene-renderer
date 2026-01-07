@@ -8,19 +8,47 @@ namespace gk1
 {
     namespace
     {
-        constexpr std::array<float, 24> VERTICES = {
-            // positions          // colors
-             1.0F,  1.0F,  1.0F,  1.0F, 0.0F, 0.0F, // v0 - red
-            -1.0F, -1.0F,  1.0F,  0.0F, 1.0F, 0.0F, // v1 - green
-            -1.0F,  1.0F, -1.0F,  0.0F, 0.0F, 1.0F, // v2 - blue
-             1.0F, -1.0F, -1.0F,  1.0F, 1.0F, 0.0F  // v3 - yellow
+        constexpr std::array<float, 216> VERTICES = {
+            // positions           // colors             // normals
+            // Front - red
+             1.0F,  1.0F,  1.0F,    1.0F, 0.0F, 0.0F,    0.0F, 0.0F, 1.0F,
+            -1.0F,  1.0F,  1.0F,    1.0F, 0.0F, 0.0F,    0.0F, 0.0F, 1.0F,
+            -1.0F, -1.0F,  1.0F,    1.0F, 0.0F, 0.0F,    0.0F, 0.0F, 1.0F,
+             1.0F, -1.0F,  1.0F,    1.0F, 0.0F, 0.0F,    0.0F, 0.0F, 1.0F,
+            // Back - green
+             1.0F,  1.0F, -1.0F,    0.0F, 1.0F, 0.0F,    0.0F, 0.0F,-1.0F,
+            -1.0F,  1.0F, -1.0F,    0.0F, 1.0F, 0.0F,    0.0F, 0.0F,-1.0F,
+            -1.0F, -1.0F, -1.0F,    0.0F, 1.0F, 0.0F,    0.0F, 0.0F,-1.0F,
+             1.0F, -1.0F, -1.0F,    0.0F, 1.0F, 0.0F,    0.0F, 0.0F,-1.0F,
+            // Left - blue
+            -1.0F,  1.0F,  1.0F,    0.0F, 0.0F, 1.0F,   -1.0F, 0.0F, 0.0F,
+            -1.0F,  1.0F, -1.0F,    0.0F, 0.0F, 1.0F,   -1.0F, 0.0F, 0.0F,
+            -1.0F, -1.0F, -1.0F,    0.0F, 0.0F, 1.0F,   -1.0F, 0.0F, 0.0F,
+            -1.0F, -1.0F,  1.0F,    0.0F, 0.0F, 1.0F,   -1.0F, 0.0F, 0.0F,
+            // Right - yellow
+             1.0F,  1.0F, -1.0F,    1.0F, 1.0F, 0.0F,    1.0F, 0.0F, 0.0F,
+             1.0F,  1.0F,  1.0F,    1.0F, 1.0F, 0.0F,    1.0F, 0.0F, 0.0F,
+             1.0F, -1.0F,  1.0F,    1.0F, 1.0F, 0.0F,    1.0F, 0.0F, 0.0F,
+             1.0F, -1.0F, -1.0F,    1.0F, 1.0F, 0.0F,    1.0F, 0.0F, 0.0F,
+            // Top - magenta
+             1.0F,  1.0F, -1.0F,    1.0F, 0.0F, 1.0F,    0.0F, 1.0F, 0.0F,
+            -1.0F,  1.0F, -1.0F,    1.0F, 0.0F, 1.0F,    0.0F, 1.0F, 0.0F,
+            -1.0F,  1.0F,  1.0F,    1.0F, 0.0F, 1.0F,    0.0F, 1.0F, 0.0F,
+             1.0F,  1.0F,  1.0F,    1.0F, 0.0F, 1.0F,    0.0F, 1.0F, 0.0F,
+            // Bottom - cyan
+             1.0F, -1.0F,  1.0F,    0.0F, 1.0F, 1.0F,    0.0F,-1.0F, 0.0F,
+            -1.0F, -1.0F,  1.0F,    0.0F, 1.0F, 1.0F,    0.0F,-1.0F, 0.0F,
+            -1.0F, -1.0F, -1.0F,    0.0F, 1.0F, 1.0F,    0.0F,-1.0F, 0.0F,
+             1.0F, -1.0F, -1.0F,    0.0F, 1.0F, 1.0F,    0.0F,-1.0F, 0.0F
         };
 
-        constexpr std::array<unsigned int, 12> INDICES = {
-            0, 1, 2,
-            0, 3, 1,
-            0, 2, 3,
-            1, 3, 2
+        constexpr std::array<unsigned int, 36> INDICES = {
+             0,  1,  2,  0,  2,  3,
+             4,  6,  5,  4,  7,  6,
+             8,  9, 10,  8, 10, 11,
+            12, 14, 13, 12, 15, 14,
+            16, 17, 18, 16, 18, 19,
+            20, 22, 21, 20, 23, 22
         };
     } // namespace
 
@@ -44,11 +72,13 @@ namespace gk1
                      INDICES.data(),
                      GL_STATIC_DRAW);
 
-        constexpr GLsizei stride = 6 * sizeof(float);
+        constexpr GLsizei stride = 9 * static_cast<GLsizei>(sizeof(float));
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, reinterpret_cast<void*>(0));
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, stride, reinterpret_cast<void*>(3 * sizeof(float)));
         glEnableVertexAttribArray(1);
+        glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, stride, reinterpret_cast<void*>(6 * sizeof(float)));
+        glEnableVertexAttribArray(2);
 
         glBindVertexArray(0);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
