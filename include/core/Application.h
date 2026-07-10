@@ -44,7 +44,6 @@ namespace gk1
         glm::mat4 m_modelMatrix{1.0F};
         glm::mat4 m_viewMatrix{1.0F};
         glm::mat4 m_projectionMatrix{1.0F};
-        double m_lastFrameTime{0.0};
         float m_rotationAngle{0.0F};
         bool m_glfwInitialized{false};
         bool m_initialized{false};

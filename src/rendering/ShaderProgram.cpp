@@ -51,6 +51,7 @@ namespace gk1
     ShaderProgram::ShaderProgram(const std::filesystem::path& vertexPath,
                                  const std::filesystem::path& fragmentPath)
     {
+        // Compiling and linking shaders into a shader program
         const std::string vertexSource = readFileOrThrow(vertexPath);
         const std::string fragmentSource = readFileOrThrow(fragmentPath);
 

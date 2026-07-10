@@ -105,7 +105,7 @@ namespace gk1
             m_lastFrameTime = currentTime;
 
             processInput();
-            updateTransformsOnFrame(deltaTime);
+            updateTransformsOnFrame(currentTime);
             m_renderer.beginFrame();
 
             if (m_shader && m_tetrahedron)
@@ -122,17 +122,21 @@ namespace gk1
         }
     }
 
-    void Application::updateTransformsOnFrame(double deltaTime)
+    void Application::updateTransformsOnFrame(double currentTime)
     {
         constexpr float rotationSpeed = glm::radians(45.0F);
-        m_rotationAngle += static_cast<float>(deltaTime) * rotationSpeed;
-        if (m_rotationAngle > glm::two_pi<float>())
-        {
-            m_rotationAngle -= glm::two_pi<float>();
-        }
+        const float rotationAngle = static_cast<float>(currentTime) * rotationSpeed;
 
-        m_modelMatrix = glm::rotate(glm::mat4(1.0F),
-                                    m_rotationAngle,
+        constexpr float circleRadius = 5.0F;
+        constexpr float circleSpeed = 1.0F;
+        const float circleAngle = static_cast<float>(currentTime) * circleSpeed;
+
+        const float posX = circleRadius * glm::cos(circleAngle);
+        const float posY = circleRadius * glm::sin(circleAngle);
+
+        m_modelMatrix = glm::translate(glm::mat4(1.0F), glm::vec3(posX, posY, 0.0F));
+        m_modelMatrix = glm::rotate(m_modelMatrix,
+                                    rotationAngle,
                                     glm::vec3(0.0F, 1.0F, 0.0F));
     }
 
