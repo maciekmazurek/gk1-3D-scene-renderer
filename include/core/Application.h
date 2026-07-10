@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <vector>
 
 #include <glm/mat4x4.hpp>
 
@@ -28,7 +29,7 @@ namespace gk1
         void setupCoordSystemTransforms();
         void loadContent();
         void mainLoop();
-        void updateTransformsOnFrame(double deltaTime);
+        void updateTransformsOnFrame(double currentTime);
         void updateProjection(int width, int height);
         void shutdown();
         void processInput();
@@ -44,7 +45,8 @@ namespace gk1
         glm::mat4 m_modelMatrix{1.0F};
         glm::mat4 m_viewMatrix{1.0F};
         glm::mat4 m_projectionMatrix{1.0F};
-        float m_rotationAngle{0.0F};
+        std::vector<glm::mat4> m_staticCubeMatrices;
+        double m_lastFrameTime{0.0};
         bool m_glfwInitialized{false};
         bool m_initialized{false};
     };

@@ -48,6 +48,7 @@ namespace gk1
 
         m_glfwInitialized = true;
 		setupGLFWGlad();
+        setupStaticCubes();
 		setupCoordSystemTransforms();
         loadContent();
         m_initialized = true;
@@ -79,12 +80,26 @@ namespace gk1
         glEnable(GL_DEPTH_TEST);
 	}
 
+    void Application::setupStaticCubes()
+    {
+        m_staticCubeMatrices.push_back(
+            glm::translate(glm::mat4(1.0F), glm::vec3(-5.5F, 4.0F, 0.0F))
+        );
+        m_staticCubeMatrices.push_back(
+            glm::translate(glm::mat4(1.0F), glm::vec3(5.5F, -3.0F, 0.0F))
+        );
+        m_staticCubeMatrices.push_back(
+            glm::translate(glm::mat4(1.0F), glm::vec3(0.0F, 0.5F, 6.0F))
+        );
+    }
+
     void Application::setupCoordSystemTransforms()
     {
         m_modelMatrix = glm::mat4(1.0F);
-        m_viewMatrix = glm::lookAt(glm::vec3(2.5F, 2.0F, 3.0F),
-            glm::vec3(0.0F, 0.0F, 0.0F),
-            glm::vec3(0.0F, 0.0F, 1.0F));
+        
+        m_viewMatrix = glm::lookAt(glm::vec3(8.0F, 4.0F, 8.0F),
+                                   glm::vec3(0.0F, 0.0F, 0.0F),
+                                   glm::vec3(0.0F, 1.0F, 0.0F));
         updateProjection(m_windowConfig.width, m_windowConfig.height);
 	}
 
@@ -111,10 +126,19 @@ namespace gk1
             if (m_shader && m_tetrahedron)
             {
                 m_shader->use();
-                m_shader->setMat4("model", m_modelMatrix);
                 m_shader->setMat4("view", m_viewMatrix);
                 m_shader->setMat4("projection", m_projectionMatrix);
+
+                // Render dynamic rotating cube
+                m_shader->setMat4("model", m_modelMatrix);
                 m_renderer.render(*m_tetrahedron, *m_shader);
+
+                // Render static cubes
+                for (const auto& staticMatrix : m_staticCubeMatrices)
+                {
+                    m_shader->setMat4("model", staticMatrix);
+                    m_renderer.render(*m_tetrahedron, *m_shader);
+                }
             }
 
             glfwSwapBuffers(m_window->handle());
@@ -127,14 +151,14 @@ namespace gk1
         constexpr float rotationSpeed = glm::radians(45.0F);
         const float rotationAngle = static_cast<float>(currentTime) * rotationSpeed;
 
-        constexpr float circleRadius = 5.0F;
+        constexpr float circleRadius = 3.0F;
         constexpr float circleSpeed = 1.0F;
         const float circleAngle = static_cast<float>(currentTime) * circleSpeed;
 
         const float posX = circleRadius * glm::cos(circleAngle);
-        const float posY = circleRadius * glm::sin(circleAngle);
+        const float posZ = circleRadius * glm::sin(circleAngle);
 
-        m_modelMatrix = glm::translate(glm::mat4(1.0F), glm::vec3(posX, posY, 0.0F));
+        m_modelMatrix = glm::translate(glm::mat4(1.0F), glm::vec3(posX, 0.0F, posZ));
         m_modelMatrix = glm::rotate(m_modelMatrix,
                                     rotationAngle,
                                     glm::vec3(0.0F, 1.0F, 0.0F));
@@ -144,7 +168,7 @@ namespace gk1
     {
         const int clampedHeight = std::max(height, 1);
         const float aspect = static_cast<float>(width) / static_cast<float>(clampedHeight);
-        m_projectionMatrix = glm::perspective(glm::radians(70.0F), aspect, 0.1F, 100.0F);
+        m_projectionMatrix = glm::perspective(glm::radians(60.0F), aspect, 0.1F, 100.0F);
     }
 
     void Application::processInput()
@@ -192,4 +216,4 @@ namespace gk1
             m_window->updateSize(width, height);
         }
     }
-} // namespace gk1
+} // namespace gk1  
