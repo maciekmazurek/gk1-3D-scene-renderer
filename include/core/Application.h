@@ -13,7 +13,9 @@ struct GLFWwindow;
 namespace gk1
 {
     class ShaderProgram;
+    class Mesh;
     class TetrahedronMesh;
+    class SphereMesh;
 
     class Application final
     {
@@ -27,6 +29,7 @@ namespace gk1
         void initialize();
         void setupGLFWGlad();
         void setupCoordSystemTransforms();
+        void setupStaticCubes();
         void loadContent();
         void mainLoop();
         void updateTransformsOnFrame(double currentTime);
@@ -42,6 +45,7 @@ namespace gk1
         std::unique_ptr<Window> m_window;
         std::unique_ptr<ShaderProgram> m_shader;
         std::unique_ptr<TetrahedronMesh> m_tetrahedron;
+        std::unique_ptr<SphereMesh> m_sphere;
         glm::mat4 m_modelMatrix{1.0F};
         glm::mat4 m_viewMatrix{1.0F};
         glm::mat4 m_projectionMatrix{1.0F};

@@ -17,6 +17,7 @@ set(PROJECT_SOURCES
     src/rendering/Renderer.cpp
     src/rendering/ShaderProgram.cpp
     src/rendering/TetrahedronMesh.cpp
+    src/rendering/SphereMesh.cpp
 )
 
 add_executable(${PROJECT_NAME} ${PROJECT_SOURCES})

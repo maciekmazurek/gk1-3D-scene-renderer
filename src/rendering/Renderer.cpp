@@ -3,7 +3,7 @@
 #include <glad/glad.h>
 
 #include "rendering/ShaderProgram.h"
-#include "rendering/TetrahedronMesh.h"
+#include "rendering/Mesh.h"
 
 namespace gk1
 {
@@ -20,7 +20,7 @@ namespace gk1
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 
-    void Renderer::render(const TetrahedronMesh& mesh, const ShaderProgram& shader) const
+    void Renderer::render(const Mesh& mesh, const ShaderProgram& shader) const
     {
         shader.use();
         mesh.draw();

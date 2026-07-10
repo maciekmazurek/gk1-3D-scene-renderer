@@ -4,7 +4,7 @@
 
 namespace gk1
 {
-    class TetrahedronMesh;
+    class Mesh;
     class ShaderProgram;
 
     class Renderer final
@@ -14,7 +14,7 @@ namespace gk1
 
         void setClearColor(const std::array<float, 4>& color);
         void beginFrame() const;
-        void render(const TetrahedronMesh& mesh, const ShaderProgram& shader) const;
+        void render(const Mesh& mesh, const ShaderProgram& shader) const;
 
     private:
         std::array<float, 4> m_clearColor;

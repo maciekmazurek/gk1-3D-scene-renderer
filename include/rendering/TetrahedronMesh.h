@@ -1,24 +1,18 @@
 #pragma once
 
+#include "rendering/Mesh.h"
+
 namespace gk1
 {
-    class TetrahedronMesh final
+    class TetrahedronMesh final : public Mesh
     {
     public:
         TetrahedronMesh();
-        ~TetrahedronMesh();
+        ~TetrahedronMesh() override;
 
-        TetrahedronMesh(const TetrahedronMesh&) = delete;
-        TetrahedronMesh& operator=(const TetrahedronMesh&) = delete;
-
-        void draw() const;
+        void draw() const override;
 
     private:
-        void release() noexcept;
-
-        unsigned int m_vao{0};
-        unsigned int m_vbo{0};
-        unsigned int m_ebo{0};
-        int m_indexCount{0};
+        void release() noexcept override;
     };
 } // namespace gk1
