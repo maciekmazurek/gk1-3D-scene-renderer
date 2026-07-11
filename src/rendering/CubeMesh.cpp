@@ -1,4 +1,4 @@
-#include "rendering/TetrahedronMesh.h"
+#include "rendering/CubeMesh.h"
 
 #include <vector>
 #include <array>
@@ -7,7 +7,7 @@
 
 namespace gk1
 {
-    TetrahedronMesh::TetrahedronMesh()
+    CubeMesh::CubeMesh()
     {
         std::vector<float> vertices = {
             // positions           // colors             // normals
@@ -55,5 +55,5 @@ namespace gk1
 		createVAOVBOEBO(vertices, indices);
     }
 
-    TetrahedronMesh::~TetrahedronMesh() = default;
+    CubeMesh::~CubeMesh() = default;
 } // namespace gk1

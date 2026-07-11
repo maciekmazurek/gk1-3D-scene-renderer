@@ -11,7 +11,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "rendering/ShaderProgram.h"
-#include "rendering/TetrahedronMesh.h"
+#include "rendering/CubeMesh.h"
 #include "rendering/SphereMesh.h"
 
 namespace gk1
@@ -107,7 +107,7 @@ namespace gk1
     void Application::loadContent()
     {
         m_shader = std::make_unique<ShaderProgram>("assets/shaders/mesh.vert", "assets/shaders/mesh.frag");
-        m_tetrahedron = std::make_unique<TetrahedronMesh>();
+        m_cube = std::make_unique<CubeMesh>();
         m_sphere = std::make_unique<SphereMesh>(1.5F, 20, 20);
     }
 
@@ -123,7 +123,7 @@ namespace gk1
             updateTransformsOnFrame(currentTime);
             m_renderer.beginFrame();
 
-            if (m_shader && m_tetrahedron && m_sphere)
+            if (m_shader && m_cube && m_sphere)
             {
                 m_shader->use();
                 m_shader->setMat4("view", m_viewMatrix);
@@ -131,13 +131,13 @@ namespace gk1
 
                 // Render dynamic rotating cube
                 m_shader->setMat4("model", m_modelMatrix);
-                m_renderer.render(*m_tetrahedron, *m_shader);
+                m_renderer.render(*m_cube, *m_shader);
 
                 // Render static cubes
                 for (const auto& staticMatrix : m_staticCubeMatrices)
                 {
                     m_shader->setMat4("model", staticMatrix);
-                    m_renderer.render(*m_tetrahedron, *m_shader);
+                    m_renderer.render(*m_cube, *m_shader);
                 }
 
                 // Render sphere
@@ -186,7 +186,7 @@ namespace gk1
 
     void Application::shutdown()
     {
-        m_tetrahedron.reset();
+        m_cube.reset();
         m_shader.reset();
         m_window.reset();
 

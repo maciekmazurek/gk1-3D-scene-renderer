@@ -17,7 +17,7 @@ set(PROJECT_SOURCES
     src/rendering/Renderer.cpp
     src/rendering/ShaderProgram.cpp
     src/rendering/Mesh.cpp
-    src/rendering/TetrahedronMesh.cpp
+    "src/rendering/CubeMesh.cpp"
     src/rendering/SphereMesh.cpp
 )
 

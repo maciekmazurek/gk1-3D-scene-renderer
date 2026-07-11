@@ -14,7 +14,7 @@ namespace gk1
 {
     class ShaderProgram;
     class Mesh;
-    class TetrahedronMesh;
+    class CubeMesh;
     class SphereMesh;
 
     class Application final
@@ -44,7 +44,7 @@ namespace gk1
         Renderer m_renderer;
         std::unique_ptr<Window> m_window;
         std::unique_ptr<ShaderProgram> m_shader;
-        std::unique_ptr<TetrahedronMesh> m_tetrahedron;
+        std::unique_ptr<CubeMesh> m_cube;
         std::unique_ptr<SphereMesh> m_sphere;
         glm::mat4 m_modelMatrix{1.0F};
         glm::mat4 m_viewMatrix{1.0F};
