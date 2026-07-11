@@ -4,6 +4,7 @@
 #include <string>
 
 #include <glm/mat4x4.hpp>
+#include <glm/vec3.hpp>
 
 namespace gk1
 {
@@ -20,6 +21,8 @@ namespace gk1
         void use() const noexcept;
 
         void setMat4(const std::string& uniformName, const glm::mat4& matrix) const;
+        void setVec3(const std::string& uniformName, const glm::vec3& vector) const;
+        void setFloat(const std::string& uniformName, float value) const;
 
     private:
         void release() noexcept;

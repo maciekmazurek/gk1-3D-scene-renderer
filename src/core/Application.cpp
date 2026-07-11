@@ -128,6 +128,19 @@ namespace gk1
                 m_shader->use();
                 m_shader->setMat4("view", m_viewMatrix);
                 m_shader->setMat4("projection", m_projectionMatrix);
+                
+                // Światło punktowe
+                m_shader->setVec3("u_lightPos", glm::vec3(3.0F, 3.0F, 3.0F));
+                m_shader->setVec3("u_lightColor", glm::vec3(1.0F));
+                m_shader->setVec3("u_viewPos", glm::vec3(0.0F, 0.0F, 5.0F));
+                
+                // Reflektor na sześcianie
+                glm::vec3 spotlightPos = m_cubePosition + glm::vec3(0.0F, 1.0F, 0.0F);
+                glm::vec3 spotlightDir = glm::normalize(glm::vec3(0.0F, 0.0F, 0.0F) - spotlightPos);  // Patrzy na środek sceny
+                m_shader->setVec3("u_spotlightPos", spotlightPos);
+                m_shader->setVec3("u_spotlightDir", spotlightDir);
+                m_shader->setVec3("u_spotlightColor", glm::vec3(1.0F, 0.8F, 0.6F));
+                m_shader->setFloat("u_spotlightAngle", glm::cos(glm::radians(25.0F)));
 
                 // Render dynamic rotating cube - SKIP in FPP mode
                 if (m_cameraMode != CameraMode::FirstPerson)

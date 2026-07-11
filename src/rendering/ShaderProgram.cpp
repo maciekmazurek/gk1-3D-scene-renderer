@@ -98,6 +98,24 @@ namespace gk1
         }
     }
 
+    void ShaderProgram::setVec3(const std::string& uniformName, const glm::vec3& vector) const
+    {
+        const int location = glGetUniformLocation(m_programId, uniformName.c_str());
+        if (location != -1)
+        {
+            glUniform3fv(location, 1, glm::value_ptr(vector));
+        }
+    }
+
+    void ShaderProgram::setFloat(const std::string& uniformName, float value) const
+    {
+        const int location = glGetUniformLocation(m_programId, uniformName.c_str());
+        if (location != -1)
+        {
+            glUniform1f(location, value);
+        }
+    }
+
     void ShaderProgram::release() noexcept
     {
         if (m_programId != 0)
