@@ -162,13 +162,18 @@ namespace gk1
             glfwSetWindowShouldClose(handle, GLFW_TRUE);
         }
 
-        if (glfwGetKey(handle, GLFW_KEY_1) == GLFW_PRESS) // Kamera statyczna
+        // Zmiana kamery: klawisz 1 - kamera statyczna, 2 - FPP, 3 - śledząca
+        if (glfwGetKey(handle, GLFW_KEY_1) == GLFW_PRESS)
         {
             m_cameraMode = CameraMode::Static;
         }
-        if (glfwGetKey(handle, GLFW_KEY_2) == GLFW_PRESS) // Kamera FPP
+        if (glfwGetKey(handle, GLFW_KEY_2) == GLFW_PRESS)
         {
             m_cameraMode = CameraMode::FirstPerson;
+        }
+        if (glfwGetKey(handle, GLFW_KEY_3) == GLFW_PRESS)
+        {
+            m_cameraMode = CameraMode::Following;
         }
     }
 
@@ -207,6 +212,19 @@ namespace gk1
             
             // Kierunek patrzenia (środek globalnego układu)
             glm::vec3 cameraTarget = glm::vec3(0.0F, 0.0F, 0.0F);
+
+            m_viewMatrix = glm::lookAt(
+                cameraPos,      // Pozycja kamery
+                cameraTarget,   // Cel
+                glm::vec3(0.0F, 1.0F, 0.0F)  // Up vector
+            );
+        }
+        else if (m_cameraMode == CameraMode::Following)
+        {
+            // Kamera śledząca - za sześcianem, z góry
+            glm::vec3 cameraOffset = glm::vec3(0.0F, 2.0F, -5.0F);
+            glm::vec3 cameraPos = m_cubePosition + cameraOffset;
+            glm::vec3 cameraTarget = m_cubePosition; // Patrzy na sześcian
 
             m_viewMatrix = glm::lookAt(
                 cameraPos,      // Pozycja kamery

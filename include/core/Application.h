@@ -20,7 +20,8 @@ namespace gk1
     enum class CameraMode
     {
         Static = 0,
-        FirstPerson = 1
+        FirstPerson = 1,
+        Following = 2
     };
 
     class Application final
