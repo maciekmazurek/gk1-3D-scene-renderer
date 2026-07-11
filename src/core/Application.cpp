@@ -129,17 +129,31 @@ namespace gk1
                 m_shader->setMat4("view", m_viewMatrix);
                 m_shader->setMat4("projection", m_projectionMatrix);
                 
-                // Światło punktowe
-                m_shader->setVec3("u_lightPos", glm::vec3(3.0F, 3.0F, 3.0F));
-                m_shader->setVec3("u_lightColor", glm::vec3(1.0F));
-                m_shader->setVec3("u_viewPos", glm::vec3(0.0F, 0.0F, 5.0F));
+                // Światło punktowe 1
+                m_shader->setVec3("u_lightPos1", glm::vec3(3.0F, 3.0F, 3.0F));
+                m_shader->setVec3("u_lightColor1", glm::vec3(1.0F, 1.0F, 1.0F)); // Białe
+                
+                // Światło punktowe 2
+                m_shader->setVec3("u_lightPos2", glm::vec3(-10.0F, 2.0F, -5.0F));
+                m_shader->setVec3("u_lightColor2", glm::vec3(0.5F, 0.7F, 1.0F)); // Niebieskie
+
+                glm::vec3 viewPos = glm::vec3(0.0F, 0.0F, 5.0F);
+                if (m_cameraMode == CameraMode::FirstPerson)
+                {
+                    viewPos = m_cubePosition + glm::vec3(0.0F, 1.0F, 0.0F);
+                }
+                else if (m_cameraMode == CameraMode::Following)
+                {
+                    viewPos = glm::vec3(8.0F, 4.0F, 8.0F);
+                }
+                m_shader->setVec3("u_viewPos", viewPos);
                 
                 // Reflektor na sześcianie
                 glm::vec3 spotlightPos = m_cubePosition + glm::vec3(0.0F, 1.0F, 0.0F);
-                glm::vec3 spotlightDir = glm::normalize(glm::vec3(0.0F, 0.0F, 0.0F) - spotlightPos);  // Patrzy na środek sceny
+                glm::vec3 spotlightDir = glm::normalize(glm::vec3(0.0F, 0.0F, 0.0F) - spotlightPos);
                 m_shader->setVec3("u_spotlightPos", spotlightPos);
                 m_shader->setVec3("u_spotlightDir", spotlightDir);
-                m_shader->setVec3("u_spotlightColor", glm::vec3(1.0F, 0.8F, 0.6F));
+                m_shader->setVec3("u_spotlightColor", glm::vec3(2.0F, 1.5F, 1.0F)); // Ciepły, jasny
                 m_shader->setFloat("u_spotlightAngle", glm::cos(glm::radians(25.0F)));
 
                 // Render dynamic rotating cube - SKIP in FPP mode
