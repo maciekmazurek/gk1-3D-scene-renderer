@@ -106,7 +106,7 @@ namespace gk1
 
     void Application::loadContent()
     {
-        m_shader = std::make_unique<ShaderProgram>("assets/shaders/tetrahedron.vert", "assets/shaders/tetrahedron.frag");
+        m_shader = std::make_unique<ShaderProgram>("assets/shaders/mesh.vert", "assets/shaders/mesh.frag");
         m_tetrahedron = std::make_unique<TetrahedronMesh>();
         m_sphere = std::make_unique<SphereMesh>(1.5F, 20, 20);
     }
@@ -123,7 +123,7 @@ namespace gk1
             updateTransformsOnFrame(currentTime);
             m_renderer.beginFrame();
 
-            if (m_shader && m_tetrahedron)
+            if (m_shader && m_tetrahedron && m_sphere)
             {
                 m_shader->use();
                 m_shader->setMat4("view", m_viewMatrix);
@@ -141,8 +141,7 @@ namespace gk1
                 }
 
                 // Render sphere
-                glm::mat4 sphereModel = glm::translate(glm::mat4(1.0F), glm::vec3(0.0F, 0.0F, 0.0F));
-                m_shader->setMat4("model", sphereModel);
+                m_shader->setMat4("model", glm::mat4(1.0F));
                 m_renderer.render(*m_sphere, *m_shader);
             }
 

@@ -9,10 +9,5 @@ namespace gk1
     public:
         TetrahedronMesh();
         ~TetrahedronMesh() override;
-
-        void draw() const override;
-
-    private:
-        void release() noexcept override;
     };
 } // namespace gk1

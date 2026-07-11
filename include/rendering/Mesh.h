@@ -1,5 +1,7 @@
-// include/rendering/Mesh.h
 #pragma once
+
+#include <glad/glad.h>
+#include <vector>
 
 namespace gk1
 {
@@ -7,15 +9,16 @@ namespace gk1
     {
     public:
         Mesh() = default;
-        virtual ~Mesh() = default;
+        virtual ~Mesh();
 
         Mesh(const Mesh&) = delete;
         Mesh& operator=(const Mesh&) = delete;
 
-        virtual void draw() const = 0;
+        void draw() const;
 
     protected:
-        virtual void release() noexcept = 0;
+        void release() noexcept;
+        void createVAOVBOEBO(std::vector<float> vertices, std::vector<unsigned int> indices);
 
         unsigned int m_vao{0};
         unsigned int m_vbo{0};
