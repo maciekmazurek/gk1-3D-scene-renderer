@@ -129,9 +129,12 @@ namespace gk1
                 m_shader->setMat4("view", m_viewMatrix);
                 m_shader->setMat4("projection", m_projectionMatrix);
 
-                // Render dynamic rotating cube
-                m_shader->setMat4("model", m_modelMatrix);
-                m_renderer.render(*m_cube, *m_shader);
+                // Render dynamic rotating cube - SKIP in FPP mode
+                if (m_cameraMode != CameraMode::FirstPerson)
+                {
+                    m_shader->setMat4("model", m_modelMatrix);
+                    m_renderer.render(*m_cube, *m_shader);
+                }
 
                 // Render static cubes
                 for (const auto& staticMatrix : m_staticCubeMatrices)
@@ -150,22 +153,67 @@ namespace gk1
         }
     }
 
+    void Application::processInput()
+    {
+        GLFWwindow* handle = m_window->handle();
+
+        if (glfwGetKey(handle, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+        {
+            glfwSetWindowShouldClose(handle, GLFW_TRUE);
+        }
+
+        if (glfwGetKey(handle, GLFW_KEY_1) == GLFW_PRESS) // Kamera statyczna
+        {
+            m_cameraMode = CameraMode::Static;
+        }
+        if (glfwGetKey(handle, GLFW_KEY_2) == GLFW_PRESS) // Kamera FPP
+        {
+            m_cameraMode = CameraMode::FirstPerson;
+        }
+    }
+
     void Application::updateTransformsOnFrame(double currentTime)
     {
-        constexpr float rotationSpeed = glm::radians(45.0F);
-        const float rotationAngle = static_cast<float>(currentTime) * rotationSpeed;
+        float angle = static_cast<float>(currentTime);
+        
+        // Rotacja wokół własnej osi
+        glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0F), angle, glm::vec3(0.0F, 1.0F, 0.0F));
+        
+        // Pozycja sześcianu na orbicie
+        m_cubePosition = glm::vec3(std::sin(angle * 0.5F) * 4.0F, 0.0F, std::cos(angle * 0.5F) * 4.0F);
+        glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0F), m_cubePosition);
+        
+        m_modelMatrix = translationMatrix * rotationMatrix;
 
-        constexpr float circleRadius = 3.0F;
-        constexpr float circleSpeed = 1.0F;
-        const float circleAngle = static_cast<float>(currentTime) * circleSpeed;
+        // Aktualizuj kamerę w zależności od trybu
+        updateCameraForMode();
+    }
 
-        const float posX = circleRadius * glm::cos(circleAngle);
-        const float posZ = circleRadius * glm::sin(circleAngle);
+    void Application::updateCameraForMode()
+    {
+        if (m_cameraMode == CameraMode::Static)
+        {
+            // Kamera statyczna
+            m_viewMatrix = glm::lookAt(
+                glm::vec3(8.0F, 4.0F, 8.0F),  // Pozycja kamery
+                glm::vec3(0.0F, 0.0F, 0.0F),  // Cel
+                glm::vec3(0.0F, 1.0F, 0.0F)   // Up vector
+            );
+        }
+        else if (m_cameraMode == CameraMode::FirstPerson)
+        {
+            // FPP - kamera na pozycji sześcianu, patrzy w kierunku (0, 0, 1) w lokalnym układzie
+            glm::vec3 cameraPos = m_cubePosition + glm::vec3(0.0F, 1.0F, 0.0F);
+            
+            // Kierunek patrzenia (środek globalnego układu)
+            glm::vec3 cameraTarget = glm::vec3(0.0F, 0.0F, 0.0F);
 
-        m_modelMatrix = glm::translate(glm::mat4(1.0F), glm::vec3(posX, 0.0F, posZ));
-        m_modelMatrix = glm::rotate(m_modelMatrix,
-                                    rotationAngle,
-                                    glm::vec3(0.0F, 1.0F, 0.0F));
+            m_viewMatrix = glm::lookAt(
+                cameraPos,      // Pozycja kamery
+                cameraTarget,   // Cel
+                glm::vec3(0.0F, 1.0F, 0.0F)  // Up vector
+            );
+        }
     }
 
     void Application::updateProjection(int width, int height)
@@ -173,15 +221,6 @@ namespace gk1
         const int clampedHeight = std::max(height, 1);
         const float aspect = static_cast<float>(width) / static_cast<float>(clampedHeight);
         m_projectionMatrix = glm::perspective(glm::radians(60.0F), aspect, 0.1F, 100.0F);
-    }
-
-    void Application::processInput()
-    {
-        GLFWwindow* handle = m_window->handle();
-        if (glfwGetKey(handle, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-        {
-            m_window->requestClose();
-        }
     }
 
     void Application::shutdown()
@@ -220,4 +259,4 @@ namespace gk1
             m_window->updateSize(width, height);
         }
     }
-} // namespace gk1  
+} // namespace gk1

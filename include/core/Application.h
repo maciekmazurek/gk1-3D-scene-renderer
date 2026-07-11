@@ -17,6 +17,12 @@ namespace gk1
     class CubeMesh;
     class SphereMesh;
 
+    enum class CameraMode
+    {
+        Static = 0,
+        FirstPerson = 1
+    };
+
     class Application final
     {
     public:
@@ -36,6 +42,7 @@ namespace gk1
         void updateProjection(int width, int height);
         void shutdown();
         void processInput();
+        void updateCameraForMode();
 
         static void handleFramebufferResize(GLFWwindow* window, int width, int height);
         void onFramebufferResized(int width, int height);
@@ -50,6 +57,8 @@ namespace gk1
         glm::mat4 m_viewMatrix{1.0F};
         glm::mat4 m_projectionMatrix{1.0F};
         std::vector<glm::mat4> m_staticCubeMatrices;
+        CameraMode m_cameraMode{CameraMode::Static};
+        glm::vec3 m_cubePosition{0.0F, 0.0F, 0.0F};
         double m_lastFrameTime{0.0};
         bool m_glfwInitialized{false};
         bool m_initialized{false};
