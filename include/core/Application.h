@@ -60,6 +60,7 @@ namespace gk1
         std::vector<glm::mat4> m_staticCubeMatrices;
         CameraMode m_cameraMode{CameraMode::Static};
         glm::vec3 m_cubePosition{0.0F, 0.0F, 0.0F};
+        bool m_isNight{false};
         double m_lastFrameTime{0.0};
         bool m_glfwInitialized{false};
         bool m_initialized{false};

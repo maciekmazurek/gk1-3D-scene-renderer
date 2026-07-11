@@ -129,14 +129,18 @@ namespace gk1
                 m_shader->setMat4("view", m_viewMatrix);
                 m_shader->setMat4("projection", m_projectionMatrix);
                 
+                // Mnożnik intensywności światła w zależności od pory dnia
+                float lightIntensity = m_isNight ? 0.1F : 1.0F;
+                
                 // Światło punktowe 1
                 m_shader->setVec3("u_lightPos1", glm::vec3(3.0F, 3.0F, 3.0F));
-                m_shader->setVec3("u_lightColor1", glm::vec3(1.0F, 1.0F, 1.0F)); // Białe
+                m_shader->setVec3("u_lightColor1", glm::vec3(1.0F, 1.0F, 1.0F) * lightIntensity);
                 
                 // Światło punktowe 2
-                m_shader->setVec3("u_lightPos2", glm::vec3(-10.0F, 2.0F, -5.0F));
-                m_shader->setVec3("u_lightColor2", glm::vec3(0.5F, 0.7F, 1.0F)); // Niebieskie
-
+                m_shader->setVec3("u_lightPos2", glm::vec3(-5.0F, 2.0F, -5.0F));
+                m_shader->setVec3("u_lightColor2", glm::vec3(1.0F, 1.0F, 1.0F) * lightIntensity);
+                
+                // Aktualna pozycja kamery
                 glm::vec3 viewPos = glm::vec3(0.0F, 0.0F, 5.0F);
                 if (m_cameraMode == CameraMode::FirstPerson)
                 {
@@ -153,7 +157,8 @@ namespace gk1
                 glm::vec3 spotlightDir = glm::normalize(glm::vec3(0.0F, 0.0F, 0.0F) - spotlightPos);
                 m_shader->setVec3("u_spotlightPos", spotlightPos);
                 m_shader->setVec3("u_spotlightDir", spotlightDir);
-                m_shader->setVec3("u_spotlightColor", glm::vec3(2.0F, 1.5F, 1.0F)); // Ciepły, jasny
+                float spotlightIntensity = m_isNight ? 3.0F : 2.0F;  // Bardziej jasny w nocy
+                m_shader->setVec3("u_spotlightColor", glm::vec3(2.0F, 1.5F, 1.0F) * spotlightIntensity);
                 m_shader->setFloat("u_spotlightAngle", glm::cos(glm::radians(25.0F)));
 
                 // Render dynamic rotating cube - SKIP in FPP mode
@@ -201,6 +206,18 @@ namespace gk1
         if (glfwGetKey(handle, GLFW_KEY_3) == GLFW_PRESS)
         {
             m_cameraMode = CameraMode::Following;
+        }
+
+        // Zmiana dnia/nocy - klawisz 4
+        static bool key4Pressed = false;
+        if (glfwGetKey(handle, GLFW_KEY_4) == GLFW_PRESS && !key4Pressed)
+        {
+            m_isNight = !m_isNight;
+            key4Pressed = true;
+        }
+        if (glfwGetKey(handle, GLFW_KEY_4) == GLFW_RELEASE)
+        {
+            key4Pressed = false;
         }
     }
 
