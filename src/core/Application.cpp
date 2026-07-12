@@ -7,7 +7,6 @@
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
-#include <glm/gtc/constants.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "rendering/ShaderProgram.h"
@@ -130,7 +129,7 @@ namespace gk1
                 m_shader->setMat4("projection", m_projectionMatrix);
                 
                 // Mnożnik intensywności światła w zależności od pory dnia
-                float lightIntensity = m_isNight ? 0.1F : 1.0F;
+                float lightIntensity = m_isNight ? 0.3F : 1.0F;
                 
                 // Światło punktowe 1
                 m_shader->setVec3("u_lightPos1", glm::vec3(3.0F, 3.0F, 3.0F));
@@ -157,8 +156,7 @@ namespace gk1
                 glm::vec3 spotlightDir = glm::normalize(glm::vec3(0.0F, 0.0F, 0.0F) - spotlightPos);
                 m_shader->setVec3("u_spotlightPos", spotlightPos);
                 m_shader->setVec3("u_spotlightDir", spotlightDir);
-                float spotlightIntensity = m_isNight ? 3.0F : 2.0F;  // Bardziej jasny w nocy
-                m_shader->setVec3("u_spotlightColor", glm::vec3(2.0F, 1.5F, 1.0F) * spotlightIntensity);
+                m_shader->setVec3("u_spotlightColor", glm::vec3(2.0F, 1.5F, 1.0F));
                 m_shader->setFloat("u_spotlightAngle", glm::cos(glm::radians(25.0F)));
 
                 // Render dynamic rotating cube - SKIP in FPP mode
